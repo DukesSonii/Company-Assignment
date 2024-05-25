@@ -1,56 +1,17 @@
-// function generatePrimes(start, end) {
-//   const primes = [];
-
-//   // Loop through the range from start to end
-//   for (let i = start; i <= end; i++) {
-//     // Skip negative numbers and 0
-//     if (i <= 1) {
-//       continue;
-//     }
-
-//     let isPrime = true;
-
-//     // Loop through potential divisors from 2 to sqrt(i)
-//     for (let j = 2; j * j <= i; j++) {
-//       // If i is divisible by j, it's not a prime number
-//       if (i % j === 0) {
-//         isPrime = false;
-//         break;
-//       }
-//     }
-
-//     // If i is prime, add it to the list of primes
-//     if (isPrime) {
-//       primes.push(i);
-//     }
-//   }
-
-//   return primes;
-// }
-// module.exports = generatePrimes;
-
-function generatePrimes(start, end) {
+function basicIteration(start, end) {
   const primes = [];
 
-  // Loop through the range from start to end
   for (let i = start; i <= end; i++) {
-    // Skip negative numbers and 0
-    if (i <= 1) {
-      continue;
-    }
+    if (i <= 1) continue;
 
     let isPrime = true;
-
-    // Loop through potential divisors from 2 to sqrt(i)
     for (let j = 2; j * j <= i; j++) {
-      // If i is divisible by j, it's not a prime number
       if (i % j === 0) {
         isPrime = false;
         break;
       }
     }
 
-    // If i is prime, add it to the list of primes
     if (isPrime) {
       primes.push(i);
     }
@@ -59,4 +20,54 @@ function generatePrimes(start, end) {
   return primes;
 }
 
-module.exports = generatePrimes;
+function sieveOfEratosthenes(start, end) {
+  const sieve = Array(end + 1).fill(true);
+  sieve[0] = sieve[1] = false;
+
+  for (let i = 2; i * i <= end; i++) {
+    if (sieve[i]) {
+      for (let j = i * i; j <= end; j += i) {
+        sieve[j] = false;
+      }
+    }
+  }
+
+  const primes = [];
+  for (let i = start; i <= end; i++) {
+    if (sieve[i]) {
+      primes.push(i);
+    }
+  }
+
+  return primes;
+}
+
+function trialDivision(start, end) {
+  const primes = [];
+
+  for (let i = start; i <= end; i++) {
+    if (i <= 1) continue;
+
+    if (i % 2 === 0 && i !== 2) continue;
+
+    let isPrime = true;
+    for (let j = 3; j * j <= i; j += 2) {
+      if (i % j === 0) {
+        isPrime = false;
+        break;
+      }
+    }
+
+    if (isPrime) {
+      primes.push(i);
+    }
+  }
+
+  return primes;
+}
+
+module.exports = {
+  basicIteration,
+  sieveOfEratosthenes,
+  trialDivision,
+};
