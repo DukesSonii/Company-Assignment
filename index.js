@@ -1,11 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const path = require("path");
-const {
-  basicIteration,
-  sieveOfEratosthenes,
-  trialDivision,
-} = require("./PrimeGenerator");
+const { Basic, SieveofEratosthenes, Approach3 } = require("./PrimeGenerator");
 
 const { addLogToDb, getLogsFromDb } = require("./database");
 
@@ -14,7 +10,7 @@ const port = 3000;
 
 app.use(bodyParser.json());
 
-app.get("/api/primes", (req, res) => {
+app.get("/primeNum", (req, res) => {
   const { start, end, strategy } = req.query;
 
   if (!start || !end || !strategy) {
@@ -23,10 +19,10 @@ app.get("/api/primes", (req, res) => {
       .json({ error: "Please enter start, end, and strategy parameters" });
   }
 
-  const startInt = parseInt(start, 10);
-  const endInt = parseInt(end, 10);
+  const startval = parseInt(start, 10);
+  const endval = parseInt(end, 10);
 
-  if (isNaN(startInt) || isNaN(endInt)) {
+  if (isNaN(startval) || isNaN(endval)) {
     return res
       .status(400)
       .json({ error: "Enter valid start and end parameters" });
@@ -38,30 +34,29 @@ app.get("/api/primes", (req, res) => {
   let strategyName;
   switch (strategy) {
     case "basic":
-      primes = basicIteration(startInt, endInt);
-      strategyName = "basicIteration";
+      primes = Basic(startval, endval);
+      strategyName = "Basic";
       break;
     case "sieve":
-      primes = sieveOfEratosthenes(startInt, endInt);
-      strategyName = "sieveOfEratosthenes";
+      primes = SieveofEratosthenes(startval, endval);
+      strategyName = "SieveofEratosthenes";
       break;
     case "trial":
-      primes = trialDivision(startInt, endInt);
-      strategyName = "trialDivision";
+      primes = Approach3(startval, endval);
+      strategyName = "Approach3";
       break;
     default:
       return res.status(400).json({ error: "Invalid strategy parameter" });
   }
-
   const elapsedTime = process.hrtime(startTime);
-  const timeElapsedInMs = (elapsedTime[0] * 1e9 + elapsedTime[1]) / 1e6;
+  const ElapseTimeMS = (elapsedTime[0] * 1e9 + elapsedTime[1]) / 1e6;
 
   const log = {
     timestamp: new Date().toISOString(),
-    start: startInt,
-    end: endInt,
+    start: startval,
+    end: endval,
     strategy: strategyName,
-    timeElapsed: timeElapsedInMs,
+    timeElapsed: ElapseTimeMS,
     numberOfPrimes: primes.length,
   };
 
@@ -73,7 +68,7 @@ app.get("/api/primes", (req, res) => {
   });
 });
 
-app.get("/api/primes/logs", (req, res) => {
+app.get("/Seelogs", (req, res) => {
   getLogsFromDb((err, logs) => {
     if (err) {
       return res

@@ -1,4 +1,4 @@
-function basicIteration(start, end) {
+function Basic(start, end) {
   const primes = [];
 
   for (let i = start; i <= end; i++) {
@@ -20,7 +20,7 @@ function basicIteration(start, end) {
   return primes;
 }
 
-function sieveOfEratosthenes(start, end) {
+function SieveofEratosthenes(start, end) {
   const sieve = Array(end + 1).fill(true);
   sieve[0] = sieve[1] = false;
 
@@ -42,7 +42,7 @@ function sieveOfEratosthenes(start, end) {
   return primes;
 }
 
-function trialDivision(start, end) {
+function Approach3(start, end) {
   const primes = [];
 
   for (let i = start; i <= end; i++) {
@@ -67,7 +67,7 @@ function trialDivision(start, end) {
 }
 
 module.exports = {
-  basicIteration,
-  sieveOfEratosthenes,
-  trialDivision,
+  Basic,
+  SieveofEratosthenes,
+  Approach3,
 };
