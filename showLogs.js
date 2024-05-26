@@ -1,37 +1,25 @@
-const sqlite3 = require("sqlite3").verbose();
-const path = require("path");
-
-const dbPath = path.join(__dirname, "test.db");
-const db = new sqlite3.Database(dbPath);
-
-db.serialize(() => {
-  db.run(
-    "CREATE TABLE IF NOT EXISTS logs (timestamp TEXT, start INTEGER, end INTEGER, strategy TEXT, timeElapsed REAL, numberOfPrimes INTEGER)"
-  );
-});
+const { getLogsFromDb } = require("./database");
 
 function displayLogs() {
-  db.all("SELECT * FROM logs", [], (err, rows) => {
+  getLogsFromDb((err, logs) => {
     if (err) {
       console.error("Error retrieving logs:", err);
       return;
     }
 
-    rows.forEach((row) => {
-      console.log(`Timestamp: ${row.timestamp}`);
-      console.log(`Start: ${row.start}`);
-      console.log(`End: ${row.end}`);
-      console.log(`Strategy: ${row.strategy}`);
-      console.log(`Time Elapsed: ${row.timeElapsed} ms`);
-      console.log(`No. of Primes: ${row.numberOfPrimes}`);
-    });
+    if (logs.length === 0) {
+      console.log("No logs found.");
+      return;
+    }
 
-    // For Closong the connection
-    db.close((err) => {
-      if (err) {
-        console.error(err.message);
-      }
-      console.log("Closed the database connection.");
+    logs.forEach((log) => {
+      console.log(`Timestamp: ${log.timestamp}`);
+      console.log(`Start: ${log.start}`);
+      console.log(`End: ${log.end}`);
+      console.log(`Strategy: ${log.strategy}`);
+      console.log(`Time Elapsed: ${log.timeElapsed} ms`);
+      console.log(`No. of Primes: ${log.numberOfPrimes}`);
+      console.log("-----------------------------------");
     });
   });
 }

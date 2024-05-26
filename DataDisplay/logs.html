@@ -72,7 +72,7 @@
     <script>
       async function fetchLogs() {
         try {
-          const response = await fetch("/api/primes/logs");
+          const response = await fetch("/Seelogs");
           const data = await response.json();
 
           const logsTableBody = document.getElementById("logs-table-body");
